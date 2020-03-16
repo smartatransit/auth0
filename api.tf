@@ -1,0 +1,86 @@
+####################################################################
+# api.tf
+####################################################################
+#
+# This file contains Auth0 configuration for the Ataper API Gateway.
+# This includes the following Auth0 clients, which are essentially
+# authentication scenarios for the API:
+# (1) the native app, which can be issued tokens through a login flow
+# (2) the API gateway, which obtains anonymous tokens for users by
+#     providing its `client_secret` directly to the auth0 API
+# (3) the auth0 rule, which obtains a token for modifying user details
+#     by providing its `client_secret` directly to the auth0 API
+#
+####################################################################
+
+resource "auth0_resource_server" "ataper_api" {
+  name = "ataper-api"
+
+  # TODO change to https://${var.services_domain}
+  identifier = "https://api-gateway.services.ataper.net/"
+
+  signing_alg                                     = "HS256"
+  skip_consent_for_verifiable_first_party_clients = true
+  token_lifetime                                  = 86400
+  token_lifetime_for_web                          = 7200
+
+  dynamic "scopes" {
+    for_each = local.ataper_api_scopes
+    content {
+      value       = scopes.key
+      description = scopes.value
+    }
+  }
+}
+
+/////////////////////////////
+// / // token sources // / //
+/////////////////////////////
+
+// native login
+resource "auth0_client" "native" {
+  name            = "Ataper Native"
+  app_type        = "native"
+  oidc_conformant = true
+}
+
+resource "auth0_client_grant" "native" {
+  client_id = auth0_client.native.id
+  audience  = auth0_resource_server.ataper_api.identifier
+  scope     = ["user"]
+}
+
+// api gateway
+resource "auth0_client" "anonymous" {
+  name            = "Anonymous"
+  description     = "Used by the Ataper API Gateway rules to issue anonymous tokens"
+  app_type        = "non_interactive"
+  oidc_conformant = true
+}
+
+resource "auth0_client_grant" "anonymous" {
+  client_id = auth0_client.anonymous.id
+  audience  = auth0_resource_server.ataper_api.identifier
+  scope     = []
+}
+
+// auth0 rules
+resource "auth0_client" "auth0" {
+  name            = "Auth0 rules"
+  description     = "Used by auth0 rules to access Ataper APIs"
+  app_type        = "non_interactive"
+  oidc_conformant = true
+}
+
+resource "auth0_client_grant" "auth0" {
+  client_id = auth0_client.auth0.id
+  audience  = auth0_resource_server.ataper_api.identifier
+  scope     = ["auth0"]
+}
+
+locals {
+  ataper_api_scopes = {
+    "auth0" = "Manage Ataper users"
+    "user"  = "Access normal end-user APIs"
+  }
+}
