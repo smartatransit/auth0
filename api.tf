@@ -71,6 +71,7 @@ resource "auth0_client" "native" {
 resource "auth0_client_grant" "native" {
   client_id = auth0_client.native.id
   audience  = local.ataper_audience
+  scope     = []
 }
 
 // api gateway
@@ -84,6 +85,7 @@ resource "auth0_client" "anonymous" {
 resource "auth0_client_grant" "anonymous" {
   client_id = auth0_client.anonymous.id
   audience  = local.ataper_audience
+  scope     = []
 }
 
 // auth0 rules
@@ -97,4 +99,5 @@ resource "auth0_client" "rules" {
 resource "auth0_client_grant" "rules" {
   client_id = auth0_client.rules.id
   audience  = local.ataper_audience
+  scope     = []
 }
