@@ -17,4 +17,3 @@ module.exports = function(client, scope, audience, context, cb) {
 
   cb(null, access_token);
 };
-g
