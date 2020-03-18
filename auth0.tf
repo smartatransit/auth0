@@ -18,7 +18,7 @@ provider "auth0" {
 
 resource "auth0_tenant" "auth0" {
   friendly_name    = "Ataper Transit"
-  default_audience = local.audience
+  default_audience = local.ataper_audience
 
   allowed_logout_urls   = []
   enabled_locales       = ["en"]
