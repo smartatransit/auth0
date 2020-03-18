@@ -16,20 +16,40 @@
 resource "auth0_resource_server" "ataper_api" {
   name = "ataper-api"
 
-  # TODO change to https://${var.services_domain}
-  identifier = "https://api-gateway.services.ataper.net/"
+  identifier = "https://api-gateway.${var.services_domain}/"
 
   signing_alg                                     = "HS256"
   skip_consent_for_verifiable_first_party_clients = true
   token_lifetime                                  = 86400
   token_lifetime_for_web                          = 7200
 
-  dynamic "scopes" {
-    for_each = local.ataper_api_scopes
-    content {
-      value       = scopes.key
-      description = scopes.value
-    }
+  scopes {
+    value       = "auth0"
+    description = "Manage Ataper users"
+  }
+  scopes {
+    value       = "user"
+    description = "Access normal end-user APIs"
+  }
+}
+
+resource "auth0_resource_server" "ataper_api_symmetric" {
+  name = "ataper-api"
+
+  identifier = "https://api-gateway.${var.services_domain}/"
+
+  signing_alg                                     = "RS256"
+  skip_consent_for_verifiable_first_party_clients = true
+  token_lifetime                                  = 86400
+  token_lifetime_for_web                          = 7200
+
+  scopes {
+    value       = "auth0"
+    description = "Manage Ataper users"
+  }
+  scopes {
+    value       = "user"
+    description = "Access normal end-user APIs"
   }
 }
 
@@ -76,11 +96,4 @@ resource "auth0_client_grant" "auth0" {
   client_id = auth0_client.auth0.id
   audience  = auth0_resource_server.ataper_api.identifier
   scope     = ["auth0"]
-}
-
-locals {
-  ataper_api_scopes = {
-    "auth0" = "Manage Ataper users"
-    "user"  = "Access normal end-user APIs"
-  }
 }

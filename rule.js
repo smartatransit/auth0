@@ -1,26 +1,18 @@
 function(user, context, callback) {
     const namespace = 'https://ataper.net/';
 
-    var user = false;
+    var isUser = false;
 
-    if (context.accessToken.scope.include("internal")) {
-        context.idToken[namespace + 'role'] = "internal";
-    } else if (context.accessToken.scope.include("user")) {
-        user = true
-        context.idToken[namespace + 'role'] = "user";
-    } else {
-        context.idToken[namespace + 'role'] = "anonymous";
-    }
+    var rulesClientIDs = configuration.rulesClientIDs.split(",");
+    var anonymousClientIDs = configuration.anonymousClientIDs.split(",");
+    var userClientIDs = configuration.userClientIDs.split(",");
 
-    if (user) {
-        // TODO use configuration.client_id and configuration.client_secret to do DB stuff
-
-        if (user.email_verified) {
-            context.idToken[namespace + 'email'] = user.email;
-        }
-        if (user.phone_verified) {
-            context.idToken[namespace + 'phone'] = user.phone;
-        }
+    if (anonymousClientIDs.include(context.clientID)) {
+        context.accessToken[namespace + 'role'] = "anonymous";
+    } else if (rulesClientIDs.include(context.clientID)) {
+        context.accessToken[namespace + 'role'] = "internal";
+    } else if (userClientIDs.include(context.clientID)) {
+        context.accessToken[namespace + 'role'] = "user";
     }
 
     callback(null, user, context);
