@@ -9,7 +9,7 @@ resource "auth0_rule_config" "anonymous_client_ids" {
 }
 resource "auth0_rule_config" "user_client_ids" {
   key   = "userClientIDs"
-  value = auth0_client.user.client_id
+  value = auth0_client.native.client_id
 }
 
 resource "auth0_rule" "internal_claims" {

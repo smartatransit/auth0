@@ -57,7 +57,7 @@ resource "auth0_resource_server" "ataper_api_symmetric" {
 // / // token sources // / //
 /////////////////////////////
 
-// native login
+// user logins
 resource "auth0_client" "native" {
   name            = "Ataper Native"
   app_type        = "native"
