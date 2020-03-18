@@ -48,12 +48,16 @@ resource "auth0_resource_server" "ataper_api_symmetric" {
   token_lifetime_for_web                          = 7200
 
   scopes {
-    value       = "auth0"
-    description = "Manage Ataper users"
+    value       = "be:anonymous"
+    description = "Can obtain anonymous tokens"
   }
   scopes {
-    value       = "user"
-    description = "Access normal end-user APIs"
+    value       = "be:user"
+    description = "Can obtain end-user tokens"
+  }
+  scopes {
+    value       = "be:internal"
+    description = "Can obtain internal access tokens"
   }
 }
 
@@ -71,7 +75,7 @@ resource "auth0_client" "native" {
 resource "auth0_client_grant" "native" {
   client_id = auth0_client.native.id
   audience  = local.ataper_audience
-  scope     = []
+  scope     = ["be:user"]
 }
 
 // api gateway
@@ -85,7 +89,7 @@ resource "auth0_client" "anonymous" {
 resource "auth0_client_grant" "anonymous" {
   client_id = auth0_client.anonymous.id
   audience  = local.ataper_audience
-  scope     = []
+  scope     = ["be:anonymous"]
 }
 
 // auth0 rules
@@ -99,5 +103,5 @@ resource "auth0_client" "rules" {
 resource "auth0_client_grant" "rules" {
   client_id = auth0_client.rules.id
   audience  = local.ataper_audience
-  scope     = []
+  scope     = ["be:internal"]
 }
