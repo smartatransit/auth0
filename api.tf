@@ -34,13 +34,13 @@ resource "auth0_resource_server" "ataper_api" {
 }
 
 locals {
-  audience = "https://${var.services_domain}/"
+  ataper_audience = "https://${var.services_domain}/"
 }
 
 resource "auth0_resource_server" "ataper_api_symmetric" {
   name = "ataper-api"
 
-  identifier = local.audience
+  identifier = local.ataper_audience
 
   signing_alg                                     = "RS256"
   skip_consent_for_verifiable_first_party_clients = true
@@ -70,8 +70,8 @@ resource "auth0_client" "native" {
 
 resource "auth0_client_grant" "native" {
   client_id = auth0_client.native.id
-  audience  = local.audience
-  scope     = ["user"]
+  audience  = local.ataper_audience
+  scope     = []
 }
 
 // api gateway
@@ -84,20 +84,20 @@ resource "auth0_client" "anonymous" {
 
 resource "auth0_client_grant" "anonymous" {
   client_id = auth0_client.anonymous.id
-  audience  = local.audience
+  audience  = local.ataper_audience
   scope     = []
 }
 
 // auth0 rules
-resource "auth0_client" "auth0" {
+resource "auth0_client" "rules" {
   name            = "Auth0 rules"
   description     = "Used by auth0 rules to access Ataper APIs"
   app_type        = "non_interactive"
   oidc_conformant = true
 }
 
-resource "auth0_client_grant" "auth0" {
-  client_id = auth0_client.auth0.id
-  audience  = local.audience
-  scope     = ["auth0"]
+resource "auth0_client_grant" "rules" {
+  client_id = auth0_client.rules.id
+  audience  = local.ataper_audience
+  scope     = []
 }
