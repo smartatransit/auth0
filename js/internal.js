@@ -1,13 +1,18 @@
-function(user, context, callback) {
-    const namespace = 'https://ataper.net/';
+module.exports = function(client, scope, audience, context, cb) {
+	var access_token = {};
+	access_token.scope = scope; // do not remove this line
 
-    var isUser = false;
+	const namespace = 'https://ataper.net/';
+	console.log(scope);
+	if (scope) {
+		if (scope.indexOf("be:anonymous") > -1) {
+			access_token[namespace + "role"] = "anonymous";
+		} else if (scope.indexOf("be:internal") > -1) {
+			access_token[namespace + "role"] = "internal";
+		} else if (scope.indexOf("be:user") > -1) {
+			access_token[namespace + "role"] = "user";
+		}
+	}
 
-    if (context.clientID == ${anonymous_client_id}) {
-        context.accessToken[namespace + 'role'] = "anonymous";
-    } else if (context.clientID == ${rules_client_id}) {
-        context.accessToken[namespace + 'role'] = "internal";
-    }
-
-    callback(null, user, context);
-}
+	cb(null, access_token);
+};
