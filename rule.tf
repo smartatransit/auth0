@@ -1,14 +1,15 @@
-resource "auth0_rule_config" "client_id" {
-  key   = "client_id"
+# comma-separated lists of client_ids to map into different roles
+resource "auth0_rule_config" "internal_client_ids" {
+  key   = "rulesClientIDs"
   value = auth0_client.auth0.client_id
 }
-resource "auth0_rule_config" "client_secret" {
-  key   = "client_secret"
-  value = auth0_client.auth0.client_secret
+resource "auth0_rule_config" "anonymous_client_ids" {
+  key   = "anonymousClientIDs"
+  value = auth0_client.anonymous.client_id
 }
-resource "auth0_rule_config" "audience" {
-  key   = "audience"
-  value = "https://api-gateway.services.ataper.net" # TODO parametrize
+resource "auth0_rule_config" "user_client_ids" {
+  key   = "userClientIDs"
+  value = auth0_client.native.client_id
 }
 
 resource "auth0_rule" "internal_claims" {
