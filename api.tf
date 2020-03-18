@@ -66,7 +66,7 @@ resource "auth0_client" "native" {
 
 resource "auth0_client_grant" "native" {
   client_id = auth0_client.native.id
-  audience  = auth0_resource_server.ataper_api_ataper.identifier
+  audience  = auth0_resource_server.ataper_api_symmetric.identifier
   scope     = ["user"]
 }
 
@@ -80,7 +80,7 @@ resource "auth0_client" "anonymous" {
 
 resource "auth0_client_grant" "anonymous" {
   client_id = auth0_client.anonymous.id
-  audience  = auth0_resource_server.ataper_api_ataper.identifier
+  audience  = auth0_resource_server.ataper_api_symmetric.identifier
   scope     = []
 }
 
@@ -94,6 +94,6 @@ resource "auth0_client" "auth0" {
 
 resource "auth0_client_grant" "auth0" {
   client_id = auth0_client.auth0.id
-  audience  = auth0_resource_server.ataper_api_ataper.identifier
+  audience  = auth0_resource_server.ataper_api_symmetric.identifier
   scope     = ["auth0"]
 }
