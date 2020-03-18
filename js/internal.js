@@ -2,8 +2,7 @@ module.exports = function(client, scope, audience, context, cb) {
 	var access_token = {};
 	access_token.scope = scope; // do not remove this line
 
-	const namespace = 'https://ataper.net/';
-	console.log(scope);
+	const namespace = 'http://ataper.net/';
 	if (scope) {
 		if (scope.indexOf("be:anonymous") > -1) {
 			access_token[namespace + "role"] = "anonymous";
