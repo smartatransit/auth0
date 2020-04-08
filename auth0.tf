@@ -16,6 +16,12 @@ provider "auth0" {
   client_secret = var.auth0_client_secret
 }
 
+terraform {
+  required_providers {
+    auth0 = ">= 0.8.0"
+  }
+}
+
 resource "auth0_tenant" "auth0" {
   friendly_name    = "Ataper Transit"
   default_audience = local.ataper_audience
