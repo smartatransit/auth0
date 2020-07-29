@@ -2,7 +2,7 @@
 # api.tf
 ####################################################################
 #
-# This file contains Auth0 configuration for the Ataper API Gateway.
+# This file contains Auth0 configuration for the SMARTA API Gateway.
 # This includes the following Auth0 clients, which are essentially
 # authentication scenarios for the API:
 # (1) the native app, which can be issued tokens through a login flow
@@ -13,10 +13,10 @@
 #
 ####################################################################
 
-resource "auth0_resource_server" "ataper_api" {
-  name = "ataper-api"
+resource "auth0_resource_server" "smarta_api" {
+  name = "smarta-api"
 
-  identifier = "https://api-gateway.${var.services_domain}/"
+  identifier = "https://api-gateway.${local.services_domain}/"
 
   signing_alg                                     = "HS256"
   skip_consent_for_verifiable_first_party_clients = true
@@ -25,7 +25,7 @@ resource "auth0_resource_server" "ataper_api" {
 
   scopes {
     value       = "auth0"
-    description = "Manage Ataper users"
+    description = "Manage SMARTA users"
   }
   scopes {
     value       = "user"
@@ -34,13 +34,13 @@ resource "auth0_resource_server" "ataper_api" {
 }
 
 locals {
-  ataper_audience = "https://${var.services_domain}/"
+  smarta_audience = "https://${local.services_domain}/"
 }
 
-resource "auth0_resource_server" "ataper_api_symmetric" {
-  name = "ataper-api"
+resource "auth0_resource_server" "smarta_api_symmetric" {
+  name = "smarta-api"
 
-  identifier = local.ataper_audience
+  identifier = local.smarta_audience
 
   signing_alg                                     = "RS256"
   skip_consent_for_verifiable_first_party_clients = true
@@ -67,41 +67,41 @@ resource "auth0_resource_server" "ataper_api_symmetric" {
 
 // user logins
 resource "auth0_client" "native" {
-  name            = "Ataper Native"
+  name            = "SMARTA Native"
   app_type        = "native"
   oidc_conformant = true
 }
 
 resource "auth0_client_grant" "native" {
   client_id = auth0_client.native.id
-  audience  = local.ataper_audience
+  audience  = local.smarta_audience
   scope     = ["be:user"]
 }
 
 // api gateway
 resource "auth0_client" "anonymous" {
   name            = "Anonymous"
-  description     = "Used by the Ataper API Gateway rules to issue anonymous tokens"
+  description     = "Used by the SMARTA API Gateway rules to issue anonymous tokens"
   app_type        = "non_interactive"
   oidc_conformant = true
 }
 
 resource "auth0_client_grant" "anonymous" {
   client_id = auth0_client.anonymous.id
-  audience  = local.ataper_audience
+  audience  = local.smarta_audience
   scope     = ["be:anonymous"]
 }
 
 // auth0 rules
 resource "auth0_client" "rules" {
   name            = "Auth0 rules"
-  description     = "Used by auth0 rules to access Ataper APIs"
+  description     = "Used by auth0 rules to access SMARTA APIs"
   app_type        = "non_interactive"
   oidc_conformant = true
 }
 
 resource "auth0_client_grant" "rules" {
   client_id = auth0_client.rules.id
-  audience  = local.ataper_audience
+  audience  = local.smarta_audience
   scope     = ["be:internal"]
 }

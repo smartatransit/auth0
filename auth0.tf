@@ -4,7 +4,7 @@
 #
 # This file contains configuration for:
 # (1) the auth0 provider
-# (2) Ataper's tenant-level auth0 configuration
+# (2) SMARTA's tenant-level auth0 configuration
 # (3) access to the auth0 management API, including the access used
 #     by this terraform workspace
 #
@@ -17,8 +17,8 @@ provider "auth0" {
 }
 
 resource "auth0_tenant" "auth0" {
-  friendly_name    = "Ataper Transit"
-  default_audience = local.ataper_audience
+  friendly_name    = "SMARTA Transit"
+  default_audience = local.smarta_audience
 
   allowed_logout_urls   = []
   enabled_locales       = ["en"]

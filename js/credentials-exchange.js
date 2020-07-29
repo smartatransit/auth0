@@ -9,7 +9,7 @@ module.exports = function(client, scope, audience, context, cb) {
 	var access_token = {};
 	access_token.scope = scope; // do not remove this line
 
-	const namespace = 'https://ataper.net/';
+	const namespace = 'https://${claims_domain}/';
 	switch(client.id) {
 	case "${anonymous_client_id}":
 		access_token[namespace + 'role'] = "anonymous";
