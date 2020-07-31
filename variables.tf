@@ -13,5 +13,5 @@ variable "auth0_client_secret" {
 
 locals {
   services_domain = "services.${var.base_domain}"
-  claims_domain   = "jwt.${var.claims_domain}"
+  claims_domain   = "jwt.${var.base_domain}"
 }
