@@ -105,3 +105,17 @@ resource "auth0_client_grant" "rules" {
   audience  = local.smarta_audience
   scope     = ["be:internal"]
 }
+
+// developer access
+resource "auth0_client" "developer" {
+  name            = "Developer access"
+  description     = "Used by SMARTA developers for testing and diagnostics"
+  app_type        = "non_interactive"
+  oidc_conformant = true
+}
+
+resource "auth0_client_grant" "developer" {
+  client_id = auth0_client.developer.id
+  audience  = local.smarta_audience
+  scope     = ["be:internal"]
+}
