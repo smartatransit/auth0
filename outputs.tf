@@ -8,5 +8,5 @@ output "anonymous_client" {
   value = auth0_client.anonymous
 }
 output "developer_access_key" {
-  value = "${auth0_client.developer.id}|${auth0_client.developer.secret}"
+  value = "${auth0_client.developer.id}|${auth0_client.developer.client_secret}"
 }
