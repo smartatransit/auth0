@@ -117,5 +117,5 @@ resource "auth0_client" "developer" {
 resource "auth0_client_grant" "rules" {
   client_id = auth0_client.rules.id
   audience  = local.smarta_audience
-  scope     = ["be:admin"]
+  scope     = ["be:internal"]
 }
