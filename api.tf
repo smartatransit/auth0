@@ -114,8 +114,8 @@ resource "auth0_client" "developer" {
   oidc_conformant = true
 }
 
-resource "auth0_client_grant" "rules" {
-  client_id = auth0_client.rules.id
+resource "auth0_client_grant" "developer" {
+  client_id = auth0_client.developer.id
   audience  = local.smarta_audience
   scope     = ["be:internal"]
 }
